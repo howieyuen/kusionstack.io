@@ -1,0 +1,32 @@
+name: installation check
+on: push
+  # pull_request:
+  #   branches: 
+  #     - 'main'
+  #   paths:
+  #     - 'static/scripts/**'
+jobs:
+  check-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Install Script
+        run: static/scripts/install.sh
+      - name: Check Kusion Run
+        run: /$HOME/.kusion/kusion compile -w static/stack
+  check-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Install Script
+        run: static/scripts/install.sh
+      - name: Check Kusion Run
+        run: /$HOME/.kusion/kusion version
+  check-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Install Script
+        run: static/scripts/install.ps1
+      - name: Check Kusion Run
+        run: C:\kusion\kusion.exe version
