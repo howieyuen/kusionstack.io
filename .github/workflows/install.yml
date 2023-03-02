@@ -14,7 +14,16 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.sh
       - name: Check Kusion Run
-        run: kusion version
+        run: kusion compile -w static/stack
+        shell: bash -leo pipefail {0}
+  check-brew:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: brew install kusion
+        run: brew install KusionStack/tap/kusion
+      - name: Check Kusion Run
+        run: kusion compile -w static/stack
         shell: bash -leo pipefail {0}
   check-linux:
     runs-on: ubuntu-latest
@@ -23,7 +32,7 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.sh
       - name: Check Kusion Run
-        run: kusion version
+        run: kusion compile -w static/stack
         shell: bash -ieo pipefail {0}
   check-windows:
     runs-on: windows-latest
@@ -32,4 +41,19 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.ps1
       - name: Check Kusion Run
-        run: C:\kusion\kusion.exe version
+        run: C:\kusion\kusion.exe compile -w static/stack
+  check-scoop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Scoop install
+        run: |
+          iwr -useb get.scoop.sh -outfile 'install.ps1'
+          .\install.ps1 -RunAsAdmin
+          scoop install KusionStack/scoop-bucket/kusion
+          scoop bucket add KusionStack https://github.com/KusionStack/scoop-bucket.git
+          scoop install KusionStack/kusion
+          kusion compile -w static/stack
+        shell: powershell
+      - name: Check Kusion Run
+        run: kusion compile -w static/stack
