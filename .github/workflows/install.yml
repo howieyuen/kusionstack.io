@@ -2,7 +2,7 @@ name: installation check
 on: 
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches: 
       - 'main'
@@ -14,7 +14,16 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.sh
       - name: Check Kusion Run
-        run: kusion version
+        run: kusion compile -w static/stack -o stdout
+        shell: bash -leo pipefail {0}
+  check-brew:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: brew install kusion
+        run: brew install KusionStack/tap/kusion
+      - name: Check Kusion Run
+        run: kusion compile -w static/stack -o stdout
         shell: bash -leo pipefail {0}
   check-linux:
     runs-on: ubuntu-latest
@@ -23,13 +32,28 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.sh
       - name: Check Kusion Run
-        run: kusion version
+        run: kusion compile -w static/stack -o stdout
         shell: bash -ieo pipefail {0}
   check-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Check Install Script
-        run: static/scripts/install.ps1
+        run: |
+          static/scripts/install.ps1
+          kusion.exe compile -w static/stack -o stdout
       - name: Check Kusion Run
-        run: C:\kusion\kusion.exe version
+        run: C:\kusion\kusion.exe compile -w static/stack -o stdout
+  check-scoop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Scoop install
+        run: |
+          iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+          scoop bucket add kcl-lang https://github.com/kcl-lang/scoop-bucket.git
+          scoop bucket add KusionStack https://github.com/KusionStack/scoop-bucket.git
+          scoop install kcl-lang/kclvm
+          scoop install KusionStack/kusion
+          kusion compile -w static/stack -o stdout
+        shell: powershell
