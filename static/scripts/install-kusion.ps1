@@ -29,7 +29,7 @@ $KusionFileName = "kusion.exe"
 $KusionFilePath = "${KusionRoot}\${KusionFileName}"
 
 # GitHub Org and repo hosting Kusion CLI
-$GitHubOrg = "KusionStack"
+$GitHubOrg = "howieyuen"
 $GitHubRepo = "kusion"
 
 # Set Github request authentication for basic authentication.

@@ -29,7 +29,7 @@ KUSION_CLI=kusion
 
 KUSION_CLI_FILE_PATH="${KUSION_HOME_DIR}/${KUSION_CLI}"
 
-GITHUB_ORG=KusionStack
+GITHUB_ORG=howieyuen
 GITHUB_REPO=kusion
 
 DOWNLOAD_BASE="https://github.com/$GITHUB_ORG/$GITHUB_REPO/releases/download"
