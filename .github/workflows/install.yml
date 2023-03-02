@@ -1,29 +1,31 @@
 name: installation check
 on: 
   push:
-    branches:
-    - main
-  pull_request:
-    branches: 
-      - 'main'
+  #   branches:
+  #   - main
+  # pull_request:
+  #   branches: 
+  #     - 'main'
 jobs:
   check-macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: Check Install Script
-        run: static/scripts/install.sh
+        run: |
+          curl -fsSL https://kcl-lang.io/script/install.sh | /bin/bash
+          static/scripts/install-kusion.sh
       - name: Check Kusion Run
-        run: kusion compile -w static/stack
+        run: kusion compile -w static/stack -o stdout
         shell: bash -leo pipefail {0}
   check-brew:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: brew install kusion
-        run: brew install KusionStack/tap/kusion
+        run: brew install howieyuen/tap/kusion
       - name: Check Kusion Run
-        run: kusion compile -w static/stack
+        run: kusion compile -w static/stack -o stdout
         shell: bash -leo pipefail {0}
   check-linux:
     runs-on: ubuntu-latest
@@ -32,28 +34,28 @@ jobs:
       - name: Check Install Script
         run: static/scripts/install.sh
       - name: Check Kusion Run
-        run: kusion compile -w static/stack
+        run: kusion compile -w static/stack -o stdout
         shell: bash -ieo pipefail {0}
   check-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Check Install Script
-        run: static/scripts/install.ps1
+        run: |
+          powershell -Command "iwr -useb https://kcl-lang.io/script/install.ps1 | iex"
+          static/scripts/install-kusion.sp1
+          kusion.exe compile -w static/stack -o stdout
       - name: Check Kusion Run
-        run: C:\kusion\kusion.exe compile -w static/stack
+        run: C:\kusion\kusion.exe compile -w static/stack -o stdout
   check-scoop:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - name: Scoop install
         run: |
-          iwr -useb get.scoop.sh -outfile 'install.ps1'
-          .\install.ps1 -RunAsAdmin
-          scoop install KusionStack/scoop-bucket/kusion
-          scoop bucket add KusionStack https://github.com/KusionStack/scoop-bucket.git
-          scoop install KusionStack/kusion
-          kusion compile -w static/stack
+          iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+          scoop bucket add kcl-lang https://github.com/kcl-lang/scoop-bucket.git
+          scoop bucket add howieyuen https://github.com/howieyuen/scoop-bucket.git
+          scoop install howieyuen/kusion
+          kusion compile -w static/stack -o stdout
         shell: powershell
-      - name: Check Kusion Run
-        run: kusion compile -w static/stack

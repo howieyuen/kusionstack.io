@@ -29,7 +29,7 @@ KUSION_CLI=kusion
 
 KUSION_CLI_FILE_PATH="${KUSION_HOME_DIR}/${KUSION_CLI}"
 
-DOWNLOAD_BASE="https://github.com/KusionStack/kusion/releases/download"
+DOWNLOAD_BASE="https://github.com/howieyuen/kusion/releases/download"
 
 # --- helper functions for logs ---
 info() {
@@ -113,7 +113,7 @@ checkExistingKusion() {
 }
 
 getLatestRelease() {
-    local KusionReleaseURL="https://api.github.com/repos/KusionStack/kusion/releases"
+    local KusionReleaseURL="https://api.github.com/repos/howieyuen/kusion/releases"
     local latest_release=""
 
     if [ "$KUSION_HTTP_REQUEST_CLI" == "curl" ]; then
